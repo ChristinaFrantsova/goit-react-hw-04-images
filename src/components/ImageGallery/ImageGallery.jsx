@@ -1,19 +1,50 @@
-// import propTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import css from './ImageGallery.module.css';
 import ImageGalleryItem from 'components/ImageGalleryItem/ImageGalleryItem';
-import Button from 'components/Button/Button';
-import Modal from 'components/Modal/Modal';
 
-const ImageGallery = () => {
+const ImageGallery = ({ images, modalOpen }) => {
   return (
     <>
       <ul className={css.ImageGallery}>
-        <ImageGalleryItem></ImageGalleryItem>
+        {images.map(({ id, webformatURL, largeImageURL }) => {
+          return (
+            <ImageGalleryItem
+              key={id}
+              id={id}
+              webformatURL={webformatURL}
+              largeImageURL={largeImageURL}
+              modalOpen={modalOpen}
+            />
+          );
+        })}
       </ul>
-      <Button />
-      {/* <Modal /> */}
     </>
   );
 };
 
+ImageGallery.propTypes = {
+  images: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      webformatURL: PropTypes.string.isRequired,
+      largeImageURL: PropTypes.string.isRequired,
+    })
+  ).isRequired,
+  modalOpen: PropTypes.func.isRequired,
+};
+
 export default ImageGallery;
+
+// const ImageGallery = ({ images, modalOpen }) => {
+//   return (
+//     <>
+//       <ul className={css.ImageGallery}>
+//         {images.map((image, index) => {
+//           return (
+//             <ImageGalleryItem key={index} image={image} modalOpen={modalOpen} />
+//           );
+//         })}
+//       </ul>
+//     </>
+//   );
+// };
