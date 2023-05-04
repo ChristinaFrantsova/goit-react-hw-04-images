@@ -82,7 +82,7 @@ export class App extends Component {
         <Searchbar onSubmit={this.onSearch} />
         <ImageGallery images={images} modalOpen={this.modalOpen} />
 
-        {images.length > 0 && <Button onLoadMore={this.onLoadMore} />}
+        {images.length >= 12 && <Button onLoadMore={this.onLoadMore} />}
         {isLoading && <Loader />}
         {isModalOpen && (
           <Modal largeImageURL={largeImageURL} modalClose={this.modalClose} />
