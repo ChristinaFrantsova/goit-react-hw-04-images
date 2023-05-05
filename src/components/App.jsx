@@ -15,37 +15,38 @@ export const App = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [largeImageURL, setLargeImageURL] = useState('');
 
-  // const getSearchedImages = async () => {
-  //   setIsLoading(true);
-  //   try {
-  //     const data = await getImagesApi(searchValue, page);
-  //     setImages([...images, ...data.hits]);
-  //   } catch (error) {
-  //     setError(error.message);
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  // };
+  const getSearchedImages = async () => {
+    setIsLoading(true);
+    try {
+      const data = await getImagesApi(searchValue, page);
+      setImages([...images, ...data.hits]);
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
+  useEffect(() => {
+    searchValue === '' ? setImages([]) : getSearchedImages(); //react-hooks/exhaustive-deps;
+  }, [searchValue, page]);
+
+  // =========================
   // useEffect(() => {
+  //   const getSearchedImages = async () => {
+  //     setIsLoading(true);
+  //     try {
+  //       const data = await getImagesApi(searchValue, page);
+  //       setImages([...images, ...data.hits]);
+  //     } catch (error) {
+  //       setError(error.message);
+  //     } finally {
+  //       setIsLoading(false);
+  //     }
+  //   };
+
   //   searchValue === '' ? setImages([]) : getSearchedImages();
   // }, [searchValue, page]);
-  // =========================
-  useEffect(() => {
-    const getSearchedImages = async () => {
-      setIsLoading(true);
-      try {
-        const data = await getImagesApi(searchValue, page);
-        setImages([...images, ...data.hits]);
-      } catch (error) {
-        setError(error.message);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    searchValue === '' ? setImages([]) : getSearchedImages();
-  }, [searchValue, page]);
   // =======================
 
   const onSearch = searchValue => {
