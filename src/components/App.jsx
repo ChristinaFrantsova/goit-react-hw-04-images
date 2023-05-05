@@ -27,6 +27,11 @@ export const App = () => {
   //   }
   // };
 
+  // useEffect(() => {
+  //   searchValue === '' ? setImages([]) : getSearchedImages();
+  // }, [searchValue, page]);
+  // ================================ варіант вище не білдиться
+
   useEffect(() => {
     if (searchValue === '') {
       setImages([]);
@@ -39,25 +44,8 @@ export const App = () => {
         .finally(setIsLoading(false));
     }
   }, [searchValue, page]);
+
   // console.log(isLoading);
-
-  // =========================
-  // useEffect(() => {
-  //   const getSearchedImages = async () => {
-  //     setIsLoading(true);
-  //     try {
-  //       const data = await getImagesApi(searchValue, page);
-  //       setImages([...images, ...data.hits]);
-  //     } catch (error) {
-  //       setError(error.message);
-  //     } finally {
-  //       setIsLoading(false);
-  //     }
-  //   };
-
-  //   searchValue === '' ? setImages([]) : getSearchedImages();
-  // }, [searchValue, page]);
-  // =======================
 
   const onSearch = searchValue => {
     setPage(1);
@@ -94,5 +82,3 @@ export const App = () => {
     </div>
   );
 };
-
-// впав деплой
