@@ -1,6 +1,6 @@
 import { Component } from 'react';
 import Searchbar from './Searchbar/Searchbar';
-import getImagesApi from './api/api';
+import getImagesApi from '../api/api';
 import ImageGallery from './ImageGallery/ImageGallery';
 import Button from 'components/Button/Button';
 import Modal from 'components/Modal/Modal';
@@ -62,7 +62,6 @@ export class App extends Component {
   onLoadMore = () => {
     this.setState(prevState => ({
       page: prevState.page + 1,
-      isLoading: true,
     }));
   };
 
