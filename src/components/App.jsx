@@ -83,6 +83,7 @@ export const App = () => {
   return (
     <div className="App">
       <Searchbar onSubmit={onSearch} />
+      {error && <p>Нажаль сталась помилка</p>}
       {images && <ImageGallery images={images} modalOpen={modalOpen} />}
 
       {images.length >= 12 && <Button onLoadMore={onLoadMore} />}
