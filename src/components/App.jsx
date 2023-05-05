@@ -26,23 +26,27 @@ export const App = () => {
   //     setIsLoading(false);
   //   }
   // };
-  useEffect(() => {
-    searchValue === '' ? setImages([]) : getSearchedImages();
-  }, [searchValue, page]);
 
-  async function getSearchedImages() {
-    setIsLoading(true);
-    try {
+  // useEffect(() => {
+  //   searchValue === '' ? setImages([]) : getSearchedImages();
+  // }, [searchValue, page]);
+  // =========================
+  useEffect(() => {
+    const getSearchedImages = async () => {
+      setIsLoading(true);
       try {
         const data = await getImagesApi(searchValue, page);
         setImages([...images, ...data.hits]);
       } catch (error) {
         setError(error.message);
+      } finally {
+        setIsLoading(false);
       }
-    } finally {
-      setIsLoading(false);
-    }
-  }
+    };
+
+    searchValue === '' ? setImages([]) : getSearchedImages();
+  }, [searchValue, page]);
+  // =======================
 
   const onSearch = searchValue => {
     setPage(1);
