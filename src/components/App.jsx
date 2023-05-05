@@ -15,21 +15,31 @@ export const App = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [largeImageURL, setLargeImageURL] = useState('');
 
-  const getSearchedImages = async () => {
-    setIsLoading(true);
-    try {
-      const data = await getImagesApi(searchValue, page);
-      setImages([...images, ...data.hits]);
-    } catch (error) {
-      setError(error.message);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  // const getSearchedImages = async () => {
+  //   setIsLoading(true);
+  //   try {
+  //     const data = await getImagesApi(searchValue, page);
+  //     setImages([...images, ...data.hits]);
+  //   } catch (error) {
+  //     setError(error.message);
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
 
   useEffect(() => {
-    searchValue === '' ? setImages([]) : getSearchedImages(); //react-hooks/exhaustive-deps;
+    if (searchValue === '') {
+      setImages([]);
+    } else {
+      getImagesApi(searchValue, page)
+        .then(res => {
+          setImages(prevImages => [...prevImages, ...res.hits]);
+        })
+        .catch(error => setError(error.message))
+        .finally(setIsLoading(false));
+    }
   }, [searchValue, page]);
+  // console.log(isLoading);
 
   // =========================
   // useEffect(() => {
@@ -56,6 +66,7 @@ export const App = () => {
   };
 
   const onLoadMore = () => {
+    setIsLoading(true);
     setPage(prevPage => prevPage + 1);
   };
 
