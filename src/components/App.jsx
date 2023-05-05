@@ -15,16 +15,6 @@ export const App = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [largeImageURL, setLargeImageURL] = useState('');
 
-  // componentDidUpdate(_, prevState) {
-  //   const { searchValue, page } = this.state;
-  //   if (
-  //     (prevState.searchValue !== searchValue && searchValue) ||
-  //     prevState.page !== page
-  //   ) {
-  //     this.getSearchedImages();
-  //   }
-  // }
-
   const getSearchedImages = async () => {
     setIsLoading(true);
     try {
@@ -41,33 +31,15 @@ export const App = () => {
     searchValue === '' ? setImages([]) : getSearchedImages();
   }, [searchValue, page]);
 
-  //  const onSearch = searchValue => {
-  //     this.setState({
-  //       page: 1,
-  //       searchValue,
-  //       images: [],
-  //     });
-  //   };
-
   const onSearch = searchValue => {
     setPage(1);
     setSearchValue(searchValue);
     setImages([]);
   };
 
-  //  const onLoadMore = () => {
-  //     this.setState(prevState => ({
-  //       page: prevState.page + 1,
-  //     }));
-  //   };
-
   const onLoadMore = () => {
     setPage(prevPage => prevPage + 1);
   };
-
-  //  const modalOpen = largeImageURL => {
-  //     this.setState({ isModalOpen: true, largeImageURL: largeImageURL });
-  //  };
 
   const modalOpen = largeImageURL => {
     setIsModalOpen(true);
