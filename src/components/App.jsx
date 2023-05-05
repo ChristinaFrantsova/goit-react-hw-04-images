@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { useState, useEffect } from 'react';
 import Searchbar from './Searchbar/Searchbar';
 import getImagesApi from '../api/api';
 import ImageGallery from './ImageGallery/ImageGallery';
@@ -6,87 +6,89 @@ import Button from 'components/Button/Button';
 import Modal from 'components/Modal/Modal';
 import Loader from 'components/Loader/Loader';
 
-export class App extends Component {
-  state = {
-    searchValue: '',
-    page: 1,
-    images: [],
-    isLoading: false,
-    error: null,
-    isModalOpen: false,
-    largeImageURL: '',
-  };
+export const App = () => {
+  const [searchValue, setSearchValue] = useState('');
+  const [page, setPage] = useState(1);
+  const [images, setImages] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [largeImageURL, setLargeImageURL] = useState('');
 
-  componentDidUpdate(_, prevState) {
-    const { searchValue, page } = this.state;
-    if (
-      (prevState.searchValue !== searchValue && searchValue) ||
-      prevState.page !== page
-    ) {
-      this.getSearchedImages();
-    }
-  }
-  getSearchedImages = async () => {
-    const { searchValue, page } = this.state;
-    this.setState({ isLoading: true });
+  // componentDidUpdate(_, prevState) {
+  //   const { searchValue, page } = this.state;
+  //   if (
+  //     (prevState.searchValue !== searchValue && searchValue) ||
+  //     prevState.page !== page
+  //   ) {
+  //     this.getSearchedImages();
+  //   }
+  // }
+
+  const getSearchedImages = async () => {
+    setIsLoading(true);
     try {
       const data = await getImagesApi(searchValue, page);
-      this.setState(prevState => ({
-        images: [...prevState.images, ...data.hits],
-      }));
+      setImages([...images, ...data.hits]);
     } catch (error) {
-      this.setState({ error: error.message });
+      setError(error.message);
     } finally {
-      this.setState({ isLoading: false });
+      setIsLoading(false);
     }
   };
 
-  onSearch = searchValue => {
-    this.setState({
-      loadMore: false,
-      page: 1,
-      searchValue,
-      images: [],
-    });
+  useEffect(() => {
+    searchValue === '' ? setImages([]) : getSearchedImages();
+  }, [searchValue, page]);
+
+  //  const onSearch = searchValue => {
+  //     this.setState({
+  //       page: 1,
+  //       searchValue,
+  //       images: [],
+  //     });
+  //   };
+
+  const onSearch = searchValue => {
+    setPage(1);
+    setSearchValue(searchValue);
+    setImages([]);
   };
 
-  // onSearch = searchValue => {
-  //   this.setState(prevState => {
-  //     if (searchValue === this.state.searchValue) {
-  //       return prevState;
-  //     }
-  //     return { searchValue, page: 1, images: [] };
-  //   });
-  // };
+  //  const onLoadMore = () => {
+  //     this.setState(prevState => ({
+  //       page: prevState.page + 1,
+  //     }));
+  //   };
 
-  onLoadMore = () => {
-    this.setState(prevState => ({
-      page: prevState.page + 1,
-    }));
+  const onLoadMore = () => {
+    setPage(prevPage => prevPage + 1);
   };
 
-  modalOpen = largeImageURL => {
-    this.setState({ isModalOpen: true, largeImageURL: largeImageURL });
+  //  const modalOpen = largeImageURL => {
+  //     this.setState({ isModalOpen: true, largeImageURL: largeImageURL });
+  //  };
+
+  const modalOpen = largeImageURL => {
+    setIsModalOpen(true);
+    setLargeImageURL(largeImageURL);
   };
 
-  modalClose = () => {
-    this.setState({ isModalOpen: false, largeImageURL: '' });
+  const modalClose = () => {
+    setIsModalOpen(false);
+    setLargeImageURL('');
   };
 
-  render() {
-    // console.log(this.state.searchValue);
-    const { images, isLoading, isModalOpen, largeImageURL } = this.state;
-    return (
-      <div className="App">
-        <Searchbar onSubmit={this.onSearch} />
-        <ImageGallery images={images} modalOpen={this.modalOpen} />
+  return (
+    <div className="App">
+      <Searchbar onSubmit={onSearch} />
+      {images && <ImageGallery images={images} modalOpen={modalOpen} />}
 
-        {images.length >= 12 && <Button onLoadMore={this.onLoadMore} />}
-        {isLoading && <Loader />}
-        {isModalOpen && (
-          <Modal largeImageURL={largeImageURL} modalClose={this.modalClose} />
-        )}
-      </div>
-    );
-  }
-}
+      {images.length >= 12 && <Button onLoadMore={onLoadMore} />}
+      {isLoading && <Loader />}
+      {isModalOpen && (
+        <Modal largeImageURL={largeImageURL} modalClose={modalClose} />
+      )}
+    </div>
+  );
+};
